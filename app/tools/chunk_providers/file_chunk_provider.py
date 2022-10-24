@@ -1,11 +1,8 @@
-from typing import BinaryIO, AnyStr, AnyStr
-from copy import copy
-
-from .chunk_provider_protocol import ChunkProviderProtocol
+from .chunk_provider_protocol import FileChunkProviderProtocol
 from .chunk import Chunk
 
 
-class FileChunkProvider(ChunkProviderProtocol):
+class FileChunkProvider(FileChunkProviderProtocol):
     def __init__(self) -> None:
         self.__data: str = ""
         self.__leftovers: str = ""

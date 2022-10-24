@@ -12,8 +12,6 @@ from gensim.parsing.preprocessing import (
     strip_multiple_whitespaces,
 )
 
-from gensim.parsing.preprocessing import split_on_space
-
 
 class NormalizationPublisher(PublisherProtocol):
     def __init__(self) -> None:
@@ -28,7 +26,7 @@ class NormalizationPublisher(PublisherProtocol):
         self.__publishers.append(publisher)
 
     def add_subscriber(self, subscriber: SubscriberProtocol) -> None:
-        self.__subscriber.append(subscriber)
+        self.__subscribers.append(subscriber)
 
     def run(self) -> None:
         if self.__data is None:
@@ -36,7 +34,8 @@ class NormalizationPublisher(PublisherProtocol):
         self.__data.data = preprocess_string(self.__data.data, self.__filters())
         self.__run_publishers(self.__data)
 
-    def __filters(self) -> list[Callable]:
+    @staticmethod
+    def __filters() -> list[Callable]:
         filters = [
             strip_tags,
             strip_punctuation,

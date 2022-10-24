@@ -1,9 +1,19 @@
+from sqlalchemy.engine.base import Engine  # type: ignore
+from sqlalchemy.orm import Session  # type: ignore
+
 from ..db.base import SessionLocal, engine
 
 
-def get_db():
-    db = SessionLocal()
+def get_session() -> Session:
+    session = SessionLocal()
     try:
-        yield db
+        yield session
     finally:
-        db.close()
+        session.close()
+
+
+def get_engine() -> Engine:
+    try:
+        yield engine
+    finally:
+        pass
