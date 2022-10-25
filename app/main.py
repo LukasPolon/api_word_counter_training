@@ -12,7 +12,3 @@ app = FastAPI(debug=True)
 
 app.include_router(word_counter.word_counter_router)
 app.include_router(word_statistics.word_statistics_router)
-
-
-word_frequency_models.Base.metadata.drop_all(bind=engine)
-word_frequency_models.Base.metadata.create_all(bind=engine)

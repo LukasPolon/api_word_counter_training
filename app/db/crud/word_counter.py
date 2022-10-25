@@ -29,6 +29,7 @@ def add_word(
 
 def commit_words(session: Session) -> None:
     session.commit()
+    session.close()
 
 
 def get_word_count(session: Session, word_name: str) -> int:

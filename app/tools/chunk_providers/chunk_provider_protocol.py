@@ -13,7 +13,7 @@ class ChunkProviderProtocol(Protocol):
         raise NotImplementedError
 
 
-class FileChunkProviderProtocol(Protocol):
+class BytesChunkProviderProtocol(Protocol):
     """<fill>"""
 
     def add_data(self, data: bytes) -> None:

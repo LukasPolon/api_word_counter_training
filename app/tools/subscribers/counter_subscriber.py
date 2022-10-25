@@ -19,8 +19,6 @@ class CounterSubscriber(SubscriberProtocol):
         self.__data.append(data)
 
     def run(self) -> None:
-        if self.__data is None:
-            raise ValueError("Data must be set.")
 
         with Session(self.__engine) as session:
             for frequency_counter_data in self.__data:
@@ -28,3 +26,4 @@ class CounterSubscriber(SubscriberProtocol):
                     item_schema = WordFrequencyCreate(word=frequency_counter_data.word)
                     add_word(session, item_schema, commit=False)
             commit_words(session)
+        self.__data = []

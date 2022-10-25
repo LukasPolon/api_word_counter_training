@@ -10,6 +10,7 @@ if sys.version_info < MIN_PYTHON:
         f"Python {MIN_PYTHON[0]}.{MIN_PYTHON[1]} or later is required."
     )
 
+
 def get_requirements() -> List[str]:
     """ Get all Python modules required by application to be installed.
         Returns:
@@ -27,5 +28,14 @@ setup(
     install_requires=get_requirements(),
     author='Lukasz Polon',
     author_email='lukaspolon@gmail.com',
-    packages=find_packages()
+    packages=find_packages(),
+    include_package_data=True,
+    entry_points={
+        "console_scripts": ["awct-manage = app.manager:manage"]
+    },
+    data_files=[
+        ("deployment", ["deployment/docker-compose.yaml"]),
+        ("deployment/httpd", ["deployment/httpd/test_file.txt"])
+
+    ]
 )

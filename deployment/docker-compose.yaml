@@ -12,7 +12,13 @@ services:
       - "5432:5432"
     volumes:
       - "api-postgres:/var/lib/postgresql/data"
-    restart: always
+
+  api-httpd:
+    image: "custom_httpd:0.0.1"
+    build: ./httpd
+    container_name: "api_httpd"
+    ports:
+      - "8080:80"
 
 volumes:
   api-postgres:
