@@ -1,0 +1,24 @@
+version: "3"
+services:
+
+  api-db:
+    image: "postgres:14"
+    container_name: "api_pg"
+    environment:
+      - POSTGRES_USER=test
+      - POSTGRES_PASSWORD=test
+      - POSTGRES_DB=test
+    ports:
+      - "5432:5432"
+    volumes:
+      - "api-postgres:/var/lib/postgresql/data"
+
+  api-httpd:
+    image: "custom_httpd:0.0.1"
+    build: ./httpd
+    container_name: "api_httpd"
+    ports:
+      - "8080:80"
+
+volumes:
+  api-postgres:
