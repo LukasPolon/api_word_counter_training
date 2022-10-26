@@ -2,7 +2,7 @@ from .chunk_provider_protocol import ChunkProviderProtocol
 from .chunk import Chunk
 
 
-class PlainChunkProvider(ChunkProviderProtocol):
+class PlainChunkProvider:
     """Gets a single piece of data and transforms it into a Chunk."""
 
     def __init__(self) -> None:

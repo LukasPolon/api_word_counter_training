@@ -4,8 +4,6 @@ from .chunk import Chunk
 
 
 class ChunkProviderProtocol(Protocol):
-    """<fill>"""
-
     def add_data(self, data: str) -> None:
         raise NotImplementedError
 
@@ -14,8 +12,6 @@ class ChunkProviderProtocol(Protocol):
 
 
 class BytesChunkProviderProtocol(Protocol):
-    """<fill>"""
-
     def add_data(self, data: bytes) -> None:
         raise NotImplementedError
 

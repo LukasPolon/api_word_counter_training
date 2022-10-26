@@ -1,14 +1,11 @@
-import abc
-from typing import Protocol, TypeVar, Type
+from typing import Protocol
 
-from ..publishers.word_counter_publisher import FrequencyCounter
+from ..publishers import word_counter_publisher as wc_publisher
 
 
 class SubscriberProtocol(Protocol):
-    @abc.abstractmethod
-    def add_data(self, data: FrequencyCounter) -> None:
+    def add_data(self, data: "wc_publisher.FrequencyCounter") -> None:
         raise NotImplementedError
 
-    @abc.abstractmethod
     def run(self) -> None:
         raise NotImplementedError
