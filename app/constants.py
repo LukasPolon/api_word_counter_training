@@ -12,7 +12,7 @@ DATABASE_DATA = {
     "password": "test",
     "host": "127.0.0.1",
     "port": "5432",
-    "database": "test"
+    "database": "test",
 }
 DATABASE_URL = (
     f"postgresql://{DATABASE_DATA.get('username')}"
@@ -21,4 +21,3 @@ DATABASE_URL = (
     f":{DATABASE_DATA.get('port')}"
     f"/{DATABASE_DATA.get('database')}"
 )
-

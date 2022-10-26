@@ -18,6 +18,7 @@ endif
 
 
 install-lints:
+	# TODO: Additional packages should have separated requirements file/files
 	$(PIP) install black==22.3.0
 	$(PIP) install mypy==0.961
 	$(PIP) install lxml==4.9.0

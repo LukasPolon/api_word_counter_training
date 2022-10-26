@@ -4,7 +4,7 @@ from datetime import datetime
 from dataclasses import dataclass
 
 from fastapi import status
-from fastapi import APIRouter, UploadFile, Depends, Query
+from fastapi import APIRouter, UploadFile, Depends, Query, HTTPException
 from sqlalchemy.orm import Session  # type: ignore
 from sqlalchemy.engine.base import Engine  # type: ignore
 
@@ -48,7 +48,7 @@ class UrlHandlerConfig:
 
 @word_counter_router.post("/", status_code=status.HTTP_201_CREATED)
 async def counter(
-    file: UploadFile | None = Query(default=None, description="File to upload"),
+    file: UploadFile | None = None,
     string_param: str
     | None = Query(
         default=None, description="Text to analyze", max_length=50, min_length=1
@@ -56,15 +56,14 @@ async def counter(
     url: str | None = Query(default=None, description="URL to file to upload"),
     engine=Depends(get_engine),
 ):
-    """ Endpoint responsible from taking the input data and saving each word occurrence in the database."""
-    start = datetime.now()
+    """Endpoint responsible from taking the input data and saving each word occurrence in the database."""
     query_params_number = len([param for param in (file, string_param, url) if param])
 
     if query_params_number > 1:
-        raise ValueError("Too much parameters")
+        raise HTTPException(status_code=400, detail="Too much query parameters")
 
     if query_params_number == 0:
-        raise ValueError("You need to specify param")
+        raise HTTPException(status_code=400, detail="Query parameter required")
 
     if url:
         url_handler_config = __url_handler_factory(engine=engine)
@@ -90,9 +89,7 @@ async def counter(
             publisher=string_handler_config.publisher,
         )
 
-    stop = datetime.now()
-
-    return {"OK": f"TIME: {stop - start}"}
+    return {"Status": "OK"}
 
 
 def __handle_string_param(

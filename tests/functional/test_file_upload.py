@@ -13,7 +13,7 @@ class TestFileUpload:
         word_counter_request = requests.post(
             f"{self.test_config.api_url}/word_counter", files=files
         )
-        assert "OK" in word_counter_request.json()
+        assert {"Status": "OK"} == word_counter_request.json()
         assert word_counter_request.status_code == 201
 
     def test_file_upload_with_statistics(self, reset_database):
