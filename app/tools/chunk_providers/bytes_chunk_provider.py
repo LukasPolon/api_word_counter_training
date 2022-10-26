@@ -1,8 +1,7 @@
-from .chunk_provider_protocol import BytesChunkProviderProtocol
 from .chunk import Chunk
 
 
-class BytesChunkProvider(BytesChunkProviderProtocol):
+class BytesChunkProvider:
     """Gets a Bytes fragment, decodes and makes it into a list of Chunks.
 
     A Chunk ends with line separator (\n).

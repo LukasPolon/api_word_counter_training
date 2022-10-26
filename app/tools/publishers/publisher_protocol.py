@@ -1,27 +1,22 @@
-import abc
-from typing import Protocol, TypeVar, Type
+from typing import Protocol, TypeVar
 
 from app.tools.chunk_providers.chunk import Chunk
 
-# from ..subscribers.subscriber_protocol import SubscriberProtocol
+from ..subscribers import subscriber_protocol as sub_protocol
 
 
 TPublisherProtocol = TypeVar("TPublisherProtocol", bound="PublisherProtocol")
 
 
 class PublisherProtocol(Protocol):
-    @abc.abstractmethod
     def add_data(self, data: Chunk) -> None:
         raise NotImplementedError
 
-    @abc.abstractmethod
     def add_publisher(self, publisher: TPublisherProtocol) -> None:
         raise NotImplementedError
 
-    @abc.abstractmethod
-    def add_subscriber(self, subscriber) -> None:
+    def add_subscriber(self, subscriber: "sub_protocol.SubscriberProtocol") -> None:
         raise NotImplementedError()
 
-    @abc.abstractmethod
     def run(self) -> None:
         raise NotImplementedError

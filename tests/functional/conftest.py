@@ -8,9 +8,7 @@ import pytest
 from multiprocessing import Process
 from dataclasses import dataclass, field
 
-from app.constants import DEPLOYMENT_DIR, HTTPD_DIR
-from app.db.base import Base
-from app.db.base import engine
+from app.constants import HTTPD_DIR
 
 
 @dataclass
@@ -22,10 +20,10 @@ class TestFileMeta:
 
 @dataclass
 class TestConfig:
-    docker_compose_file_path: str = os.path.abspath(os.path.join("deployment", "docker-compose.yaml"))
-    test_file_path: str = os.path.join(
-        HTTPD_DIR, "test_file.txt"
+    docker_compose_file_path: str = os.path.abspath(
+        os.path.join("deployment", "docker-compose.yaml")
     )
+    test_file_path: str = os.path.join(HTTPD_DIR, "test_file.txt")
     api_url: str = "http://127.0.0.1:8000"
     test_file_url: str = "http://127.0.0.1:8080/test_file.txt"
 
@@ -37,10 +35,12 @@ def docker_compose_up():
     up_result = subprocess.run(
         ["docker-compose", "-f", f"{config.docker_compose_file_path}", "up", "-d"],
         shell=True,
-        text=True
+        text=True,
     )
     assert up_result.returncode == 0
-    time.sleep(15) # would be better to use Docker API to wait for the database to setup
+    time.sleep(
+        15
+    )  # would be better to use Docker API to wait for the database to setup
 
     yield
 
@@ -49,7 +49,7 @@ def docker_compose_up():
     stop_result = subprocess.run(
         ["docker-compose", "-f", f"{config.docker_compose_file_path}", "stop"],
         shell=True,
-        text=True
+        text=True,
     )
     assert stop_result.returncode == 0
 
@@ -71,16 +71,12 @@ def run_api():
 
 @pytest.fixture()
 def reset_database():
-    import os
     cli = "awct-manage"
     if os.name == "nt":
         cli = "awct-manage.exe"
 
     print("Deleting the database")
     subprocess.run([f"{cli}", "db", "delete"])
-    # db(["delete"])
-    # Base.metadata.drop_all(bind=engine)
+
     print("Creating the database")
-    # db(["create"])
-    # Base.metadata.create_all(bind=engine)
     subprocess.run([f"{cli}", "db", "create"])

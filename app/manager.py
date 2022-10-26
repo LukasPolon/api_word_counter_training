@@ -15,6 +15,7 @@ def manage():
 @manage.command("run-app")
 def run_app():
     """Application start"""
+    # TODO: not the best way to run the application, especially if its not configurable
     uvicorn.run("app.main:app", port=8000, log_level="info")
 
 

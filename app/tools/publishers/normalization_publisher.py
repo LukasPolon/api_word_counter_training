@@ -1,4 +1,4 @@
-from typing import Type, Callable
+from typing import Callable
 
 from .publisher_protocol import PublisherProtocol
 from ...tools.chunk_providers.chunk import Chunk
@@ -13,7 +13,9 @@ from gensim.parsing.preprocessing import (
 )
 
 
-class NormalizationPublisher(PublisherProtocol):
+class NormalizationPublisher:
+    """Preprocess given data by applying normalization functions."""
+
     def __init__(self) -> None:
         self.__publishers: list[PublisherProtocol] = []
         self.__subscribers: list[SubscriberProtocol] = []
@@ -31,11 +33,22 @@ class NormalizationPublisher(PublisherProtocol):
     def run(self) -> None:
         if self.__data is None:
             raise ValueError("Data is not set")
-        self.__data.data = preprocess_string(self.__data.data, self.__filters())
+        self.__data.data_preprocessed = preprocess_string(
+            self.__data.data, self.__filters()
+        )
         self.__run_publishers(self.__data)
 
     @staticmethod
     def __filters() -> list[Callable]:
+        """Normalization functions to be used on data.
+        TODO: they may be injected instead of hardcoded if they will need to be configurable
+
+        strip_tags                  : remove tags, e.g. '<b>'
+        strip_punctuation           : replace ASCII punctuation (e.g. '.', ',') with spaces
+        strip_non_alphanum          : remove non-alphanum, e.g. '&', '^'
+        strip_multiple_whitespaces  : remove repeating whitespace characters
+                                      and turns tabs and line breaks into spaces
+        """
         filters = [
             strip_tags,
             strip_punctuation,
@@ -45,6 +58,9 @@ class NormalizationPublisher(PublisherProtocol):
         return filters
 
     def __run_publishers(self, data: Chunk) -> None:
+        """Executes configured Publishers with preprocessed data.
+        Each Publisher gets the same data.
+        """
         for publisher in self.__publishers:
             publisher.add_data(data=data)
             publisher.run()
