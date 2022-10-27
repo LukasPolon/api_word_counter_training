@@ -30,6 +30,7 @@ install-tests:
 
 install:
 	$(PYTHON_EXE) -m venv .venv
+	$(PIP) install -r requirements.txt
 	$(PYTHON) setup.py install
 
 install-all: install install-lints install-tests
@@ -57,4 +58,4 @@ unittests:
 	$(COVERAGE) report
 
 functional-tests:
-	$(PYTEST) -v tests\functional\
+	$(PYTEST) -v tests/functional/
