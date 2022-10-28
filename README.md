@@ -37,6 +37,12 @@ make develop
 
 make functional-tests   : run functional tests
 ```
+
+Ports used by the application and where to change them if case of they are already in use:
+- 5432: PG database -> deployment/docker-compose.yaml & app/constants.py
+- 8080: httpd -> deployment/docker-compose.yaml
+- 8000: api -> app/manager.py & tests/functional/conftest.py
+
 ### CLI usage:
 ```
 source ./.venv/bin/activate
