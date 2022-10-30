@@ -17,35 +17,26 @@
    previous calls).
 
 ### Dependencies:
-Python3.10, Docker (tested on 20.10.11), Docker-compose (tested on 1.29.2)
+Docker (tested on 20.10.11), Docker-compose (tested on 1.29.2)
 
-Application was created in Windows environment.
+Application was created on Windows environment.
 
 ### Usage (in order):
 ``` 
-make install-all        : install virtualenv, main dependencies, lint dependencies and test dependencies
-make mypy               : run static code analysis
-make unittests          : run unit tests
-
 
 cd deployment
-docker-compose up -d    : run database and httpd service in a containers
-cd ..
+docker-compose up -d                         : builds api and httpd images, starts the containers
+docker exec -it awcd make unittests          : run unit tests
+docker exec -it awcd make mypy               : run static code analysis
+docker exec -it awcd make functional-tests   : run functional tests
 
-source ./.venv/bin/activate (or ./.venv/Scripts/activate.bat)
-make develop
-
-make functional-tests   : run functional tests
 ```
 
-Ports used by the application and where to change them if case of they are already in use:
-- 5432: PG database -> deployment/docker-compose.yaml & app/constants.py
-- 8080: httpd -> deployment/docker-compose.yaml
-- 8000: api -> app/manager.py & tests/functional/conftest.py
+API is exposed outside container network by port 8000.
 
 ### CLI usage:
 ```
-source ./.venv/bin/activate
+Inside a container:
 
 awct-manage run-app             : run uvicorn server with application
 awct-manage db [create|delete]  : create or delete database schema
@@ -54,8 +45,7 @@ awct-manage db [create|delete]  : create or delete database schema
 
 ### CURL usage examples:
 
-- database must be up and created
-- uvicorn server must be running
+- API and database must be running (setup by docker-compose)
 
 
 /word_counter

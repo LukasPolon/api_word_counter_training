@@ -8,17 +8,42 @@ services:
       - POSTGRES_USER=test
       - POSTGRES_PASSWORD=test
       - POSTGRES_DB=test
-    ports:
-      - "5432:5432"
     volumes:
       - "api-postgres:/var/lib/postgresql/data"
+    networks:
+      - api-net
 
   api-httpd:
     image: "custom_httpd:0.0.1"
     build: ./httpd
     container_name: "api_httpd"
+    networks:
+      - api-net
+
+  api-app:
+    image: "awct-app:0.0.1"
+    build: ../
+    container_name: "awcd"
+    networks:
+      - api-net
     ports:
-      - "8080:80"
+      - "8000:8000"
+    environment:
+      - DB_USERNAME=test
+      - DB_PASSWORD=test
+      - DB_NAME=test
+      - DB_HOST=api-db
+      - DB_PORT=5432
+      - HTTPD_HOST=api-httpd
+      - HTTPD_PORT=80
+      - SELF_API_HOST=0.0.0.0
+      - SELF_API_PORT=8000
+      - SELF_API_LOG_LEVEL=info
+
 
 volumes:
   api-postgres:
+
+networks:
+  api-net:
+    driver: bridge

@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends
 from fastapi import Query
-from pydantic import BaseModel
+from pydantic import BaseModel, Required
 
 from sqlalchemy.orm import Session  # type: ignore
 
@@ -19,7 +19,8 @@ class WordStatisticsResponse(BaseModel):
 
 @word_statistics_router.get("/")
 async def stats(
-    word: str = Query(max_length=50), session: Session = Depends(get_session)
+    word: str = Query(default=Required, max_length=50, regex="^[a-zA-Z]+$"),
+    session: Session = Depends(get_session),
 ):
     """Endpoint responsible of returning a number of word occurrences."""
 

@@ -20,9 +20,13 @@ from ..tools.publishers.word_counter_publisher import WordCounterPublisher
 from ..tools.publishers.publisher_protocol import PublisherProtocol
 
 from ..tools.subscribers.counter_subscriber import CounterSubscriber
+from ..tools.subscribers.counter_subscriber import CounterSubscriberDatabaseManagement
 from ..db.schemas.word_frequency import WordFrequencyCreate
 
 from ..tools.dependencies import get_engine
+
+from ..db.crud.word_counter import add_word
+from ..db.crud.word_counter import commit_words
 
 
 word_counter_router = APIRouter(prefix="/word_counter")
@@ -139,8 +143,11 @@ async def __handle_file(
 
 
 def __file_handler_factory(engine: Engine) -> FileHandlerConfig:
+    db_management = CounterSubscriberDatabaseManagement(
+        add_word=add_word, commit_words=commit_words
+    )
     chunk_provider = BytesChunkProvider()
-    counter_subscriber = CounterSubscriber(engine, WordFrequencyCreate)
+    counter_subscriber = CounterSubscriber(engine, WordFrequencyCreate, db_management)
     word_counter_publisher = WordCounterPublisher()
     word_counter_publisher.add_subscriber(counter_subscriber)
     normalization_publisher = NormalizationPublisher()
@@ -153,9 +160,12 @@ def __file_handler_factory(engine: Engine) -> FileHandlerConfig:
 
 
 def __string_handler_factory(engine: Engine) -> StringHandlerConfig:
+    db_management = CounterSubscriberDatabaseManagement(
+        add_word=add_word, commit_words=commit_words
+    )
     chunk_provider = PlainChunkProvider()
     counter_subscriber = CounterSubscriber(
-        engine=engine, create_schema=WordFrequencyCreate
+        engine=engine, create_schema=WordFrequencyCreate, db_management=db_management
     )
     word_counter_publisher = WordCounterPublisher()
     word_counter_publisher.add_subscriber(counter_subscriber)
@@ -169,9 +179,12 @@ def __string_handler_factory(engine: Engine) -> StringHandlerConfig:
 
 
 def __url_handler_factory(engine: Engine) -> UrlHandlerConfig:
+    db_management = CounterSubscriberDatabaseManagement(
+        add_word=add_word, commit_words=commit_words
+    )
     chunk_provider = BytesChunkProvider()
     counter_subscriber = CounterSubscriber(
-        engine=engine, create_schema=WordFrequencyCreate
+        engine=engine, create_schema=WordFrequencyCreate, db_management=db_management
     )
     word_counter_publisher = WordCounterPublisher()
     word_counter_publisher.add_subscriber(counter_subscriber)
