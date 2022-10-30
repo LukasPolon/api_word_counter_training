@@ -7,6 +7,7 @@ from app.constants import DATABASE_URL
 # TODO: Database credentials should be provided as env variables, CLI , or config file
 # TODO: Credentials should be also safely stored
 
+
 engine = create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()

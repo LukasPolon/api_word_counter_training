@@ -1,20 +1,28 @@
-from typing import Type
+from typing import Type, Callable
+from dataclasses import dataclass
 
 from sqlalchemy.orm import Session  # type: ignore
 from sqlalchemy.engine.base import Engine  # type: ignore
 
 from ...db.schemas.word_frequency import WordFrequencyCreate
 from ..publishers.word_counter_publisher import FrequencyCounter
-from ...db.crud.word_counter import (
-    add_word,
-    commit_words,
-)  # TODO: those functions should be injected
+
+
+@dataclass
+class CounterSubscriberDatabaseManagement:
+    add_word: Callable
+    commit_words: Callable
 
 
 class CounterSubscriber:
     """Collects FrequencyCounter data and saves them in database."""
 
-    def __init__(self, engine: Engine, create_schema: Type[WordFrequencyCreate]):
+    def __init__(
+        self,
+        engine: Engine,
+        create_schema: Type[WordFrequencyCreate],
+        db_management: CounterSubscriberDatabaseManagement,
+    ):
         """CounterSubscriber initializer.
 
         Args:
@@ -23,6 +31,7 @@ class CounterSubscriber:
         """
         self.__engine = engine
         self.__create_schema = create_schema
+        self.__db_management = db_management
         self.__data: list[FrequencyCounter] = list()
 
     def add_data(self, data: FrequencyCounter) -> None:
@@ -39,6 +48,6 @@ class CounterSubscriber:
             for frequency_counter_data in self.__data:
                 for _ in range(frequency_counter_data.frequency):
                     item_schema = self.__create_schema(word=frequency_counter_data.word)
-                    add_word(session, item_schema, commit=False)
-            commit_words(session)
+                    self.__db_management.add_word(session, item_schema, commit=False)
+            self.__db_management.commit_words(session)
         self.__data = []

@@ -1,12 +1,12 @@
 import requests
 
-from .conftest import TestConfig, TestFileMeta, reset_database
+from .conftest import ConfigTest, FileTestMeta, reset_database
 
 
 class TestStringParameter:
 
-    test_config = TestConfig()
-    test_file_meta = TestFileMeta()
+    test_config = ConfigTest()
+    test_file_meta = FileTestMeta()
 
     def test_string_parameter_word_counter_endpoint(self, reset_database):
         word_counter_request = requests.post(

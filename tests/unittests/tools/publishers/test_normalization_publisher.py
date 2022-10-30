@@ -49,6 +49,7 @@ class TestNormalizationPublisher(TestCase):
             {"raw": "three.four", "expected": ["three", "four"]},
             {"raw": "five&&six@", "expected": ["five", "six"]},
             {"raw": "seven    eight\n", "expected": ["seven", "eight"]},
+            {"raw": "Nine & Ten", "expected": ["nine", "ten"]},
         ]
 
         for test_data_variant in test_data:

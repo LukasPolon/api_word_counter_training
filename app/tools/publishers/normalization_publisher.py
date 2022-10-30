@@ -54,6 +54,7 @@ class NormalizationPublisher:
             strip_punctuation,
             strip_non_alphanum,
             strip_multiple_whitespaces,
+            lambda word: word.lower(),
         ]
         return filters
 

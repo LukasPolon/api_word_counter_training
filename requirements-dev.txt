@@ -1,0 +1,7 @@
+black==22.3.0
+mypy==0.961
+lxml==4.9.0
+
+coverage==6.5.0
+pytest==7.2.0
+pytest-dependency==0.5.1

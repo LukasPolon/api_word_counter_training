@@ -4,6 +4,9 @@ import uvicorn
 
 from app.db.models import word_frequency as word_frequency_models
 from .db.base import engine
+from .env_config import EnvConfig
+
+env_config = EnvConfig()
 
 
 @click.group()
@@ -16,7 +19,12 @@ def manage():
 def run_app():
     """Application start"""
     # TODO: not the best way to run the application, especially if its not configurable
-    uvicorn.run("app.main:app", port=8000, log_level="info")
+    uvicorn.run(
+        "app.main:app",
+        host=env_config.get("SELF_API_HOST"),
+        port=int(env_config.get("SELF_API_PORT")),
+        log_level=env_config.get("SELF_API_LOG_LEVEL"),
+    )
 
 
 @click.argument("action", type=click.types.Choice(["create", "delete"]))

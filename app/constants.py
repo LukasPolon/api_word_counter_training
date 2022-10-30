@@ -1,5 +1,10 @@
 import os
 
+from .env_config import EnvConfig
+
+env_config = EnvConfig()
+
+
 APP_DIR = os.path.abspath(os.path.dirname(__file__))
 BASE_DIR = os.path.abspath(os.path.join(APP_DIR, ".."))
 DEPLOYMENT_DIR = os.path.abspath(os.path.join(BASE_DIR, "deployment"))
@@ -8,12 +13,13 @@ TESTS_DIR = os.path.abspath(os.path.join(BASE_DIR, "tests"))
 FUNCTIONAL_TESTS_DIR = os.path.abspath(os.path.join(TESTS_DIR, "functional"))
 
 DATABASE_DATA = {
-    "username": "test",
-    "password": "test",
-    "host": "127.0.0.1",
-    "port": "5432",
-    "database": "test",
+    "username": env_config.get("DB_USERNAME"),
+    "password": env_config.get("DB_PASSWORD"),
+    "host": env_config.get("DB_HOST"),
+    "port": env_config.get("DB_PORT"),
+    "database": env_config.get("DB_NAME"),
 }
+
 DATABASE_URL = (
     f"postgresql://{DATABASE_DATA.get('username')}"
     f":{DATABASE_DATA.get('password')}"

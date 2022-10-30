@@ -1,12 +1,12 @@
 import requests
 
-from .conftest import TestConfig, TestFileMeta, reset_database
+from .conftest import ConfigTest, FileTestMeta, reset_database
 
 
 class TestFileUpload:
 
-    test_config = TestConfig()
-    test_file_meta = TestFileMeta()
+    test_config = ConfigTest()
+    test_file_meta = FileTestMeta()
 
     def test_file_upload_word_counter_endpoint(self, reset_database):
         files = {"file": open(self.test_config.test_file_path, "rb")}
